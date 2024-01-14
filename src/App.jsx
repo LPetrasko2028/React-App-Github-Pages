@@ -1,33 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from 'react'
+import ProgressBar from './ProgressBar.jsx'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [password, setPassword] = useState('')
+  const [passwordStrength, setPasswordStrength] = useState(0)
+  
+  // useEffect(() => {
+  //   document.querySelector('input').value = password
+  //   checkPasswordStrength(password)
+  //   console.log(passwordStrength)
+  //   console.log(password)
+  // }, [password])
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value)
+    checkPasswordStrength(event.target.value)
+  }
 
+  const checkPasswordStrength = (password) => {
+    let strength = 0
+    if (password.length >= 8) {
+      strength += 1
+    }
+    if (password.length >= 12) {
+      strength += 1
+    }
+    if (password.length >= 16) {
+      strength += 1
+    }
+    if (password.match(/[a-z]+/)) {
+      strength += 1
+    }
+    if (password.match(/[A-Z]+/)) {
+      strength += 1
+    }
+    if (password.match(/[0-9]+/)) {
+      strength += 1
+    }
+    if (password.match(/[$@#&!]+/)) {
+      strength += 1
+    }
+    setPasswordStrength(strength)
+  }
+
+ 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <div className="PasswordApp">
+        <h1>Password Strength Checker</h1>
+        <p>Enter a password to check its strength</p>
+        <input id='input' value={password} onChange={handlePasswordChange}/>
+        <button>Check Password</button>
+        <p>Password Strength: {passwordStrength}</p>
+        <ProgressBar progress={passwordStrength}/>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
