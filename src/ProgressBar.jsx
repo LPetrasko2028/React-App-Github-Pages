@@ -4,67 +4,46 @@ import './ProgressBar.css';
 
 function ProgressBar(props) {
     
-    const passwordStrength = props.progress
-    
-
+    const passwordEntropy = props.progress
     const [messageToUser, setMessageToUser] = useState('')
+    const [color, setColor] = useState('red')
 
     function updateMessage() {
-        if (passwordStrength === 0) {
-          setMessageToUser('Please enter a password')
-        }
-        if (passwordStrength === 1) {
-          setMessageToUser('Weak')
-        }
-        if (passwordStrength === 2) {
-          setMessageToUser('Fair')
-        }
-        if (passwordStrength === 3) {
-          setMessageToUser('Good')
-        }
-        if (passwordStrength === 4) {
-          setMessageToUser('Strong')
-        }
-        if (passwordStrength === 5) {
-          setMessageToUser( 'Very Strong')
-        }
-      }
-      useEffect(() => {
-        updateMessage()
-        updateColor()
-      }, [passwordStrength])
-
-      const [color, setColor] = useState('Red')
-      function updateColor() {
-        if (passwordStrength === 0) {
-          setColor('Red')
-        }
-        if (passwordStrength === 1) {
+        if (passwordEntropy === 0) {
+          setMessageToUser('')
           setColor('red')
         }
-        if (passwordStrength === 2) {
+        else if (passwordEntropy < 50) {
+          setMessageToUser('Weak')
+          setColor('red')
+        }
+        else if (passwordEntropy < 60) {
+          setMessageToUser('Fair')
           setColor('orange')
         }
-        if (passwordStrength === 3) {
+        else if (passwordEntropy < 70) {
+          setMessageToUser('Good')
           setColor('yellow')
         }
-        if (passwordStrength === 4) {
+        else if (passwordEntropy < 80) {
+          setMessageToUser('Strong')
           setColor('green')
         }
-        if (passwordStrength === 5) {
-          setColor('green')
+        else if (passwordEntropy < 90) {
+          setMessageToUser( 'Very Strong')
+          setColor('blue')
         }
       }
+      // useEffect(() => {
+      //   updateMessage()
+      // }, [passwordEntropy])
+      useEffect(updateMessage, [passwordEntropy])
 
     return (
         <>
         <div className="progress-bar">
-            <div className="progress" style={{ width: `${passwordStrength*14}%`, backgroundColor: {color} }}>{messageToUser}</div>
-        </div>
-        <div className='PasswordDetails'>
-            <p>Password Length: </p>
-            <p>Password Complexity: </p>
-            <p>Password Entropy: </p>
+            <div className="progress" style={{ width: `${(passwordEntropy<=100) ? passwordEntropy : 100}%`, 
+            backgroundColor: `${color}` }}>{messageToUser}</div>
         </div>
         </>
     )
